@@ -1,0 +1,1856 @@
+Available tools:
+1. GITHUB_ADD_AN_EMAIL_ADDRESS_FOR_THE_AUTHENTICATED_USER
+Adds one or more email addresses (which will be initially unverified) to the authenticated user's GitHub account; use this to associate new emails, noting an email verified for another account will error, while an existing email for the current user is accepted.
+
+2. GITHUB_COMPARE_TWO_COMMITS
+Compares two commit points (commits, branches, tags, or SHAs) within a repository or across forks, using `BASE...HEAD` or `OWNER:REF...OWNER:REF` format for the `basehead` parameter.
+
+3. GITHUB_CREATE_A_BLOB
+Creates a Git blob in a repository, requiring content and encoding ('utf-8' or 'base64'). Requires write access to the repository.
+
+4. GITHUB_CREATE_A_PULL_REQUEST
+Creates a pull request in a GitHub repository, requiring existing `base` and `head` branches; `title` or `issue` must be provided.
+
+5. GITHUB_CREATE_A_REFERENCE
+Creates a NEW Git reference (branch or tag) in a repository. IMPORTANT: This action ONLY creates NEW references - if the reference already exists, it will fail with a 422 'Reference already exists' error. To update an existing reference, use the 'Update a reference' (GITHUB_UPDATE_A_REFERENCE) action instead. The repository must not be empty prior to this operation.
+
+6. GITHUB_CREATE_A_RELEASE
+Creates a release in a GitHub repository for a specified tag; the tag must be unique for published releases, and if a `discussion_category_name` is given, it must already exist.
+
+7. GITHUB_CREATE_A_TREE
+Creates a new Git tree object in a repository, defining file/directory structure by specifying tree entries, optionally building on a `base_tree` SHA; all provided SHAs must be valid.
+
+8. GITHUB_CREATE_OR_UPDATE_FILE_CONTENTS
+Creates a new file or updates an existing file in a GitHub repository; SHA can be provided to validate file updates, automatically fetched if not provided.
+
+9. GITHUB_DELETE_A_REPOSITORY
+Permanently deletes the specified repository; this is a destructive, irreversible action that requires admin privileges for the repository.
+
+10. GITHUB_FIND_PULL_REQUESTS
+Primary tool to find and search pull requests. Supports filtering by repository, author, state, labels, and merge status, and returns structured PR data for reliable use in workflows.
+
+11. GITHUB_FIND_REPOSITORIES
+AI-optimized repository search with smart filtering by language, stars, topics, and ownership. Builds intelligent search queries and returns clean, actionable repository data.
+
+12. GITHUB_GET_A_BLOB
+Retrieves the raw, typically Base64-encoded, content of a file (blob) from a GitHub repository using its SHA hash, if the repository and blob SHA exist.
+
+13. GITHUB_GET_A_PULL_REQUEST
+Retrieves a specific pull request from a GitHub repository using its owner, repository name, and pull request number.
+
+14. GITHUB_GET_A_REFERENCE
+Retrieves a specific Git reference (e.g., a branch, tag, or fully qualified like 'heads/main') from a GitHub repository. The reference must exist in the repository; use 'list_matching_references' first if unsure what references are available.
+
+15. GITHUB_GET_A_TREE
+Browse and list all files/directories in a GitHub repository. Efficiently retrieves the complete repository structure in a single API call when used with recursive mode. Perfect for analyzing codebase structure, finding specific files, or getting an overview of repository contents without cloning.
+
+16. GITHUB_GET_RAW_REPOSITORY_CONTENT
+Tool to fetch raw file content from a GitHub repository. Use when you need the raw bytes of a file in the repo.
+
+17. GITHUB_GET_REPOSITORY_CONTENT
+Retrieves a file's Base64 encoded content or lists a directory's contents from a GitHub repository.
+
+18. GITHUB_LIST_BRANCHES
+Lists branches for an existing GitHub repository, with an option to filter by protection status.
+
+19. GITHUB_LIST_DEPLOYMENTS
+Lists deployments for a specified repository; repository must exist.
+
+20. GITHUB_LIST_ORGANIZATIONS_FOR_A_USER
+Lists public organizations for a specified GitHub user; the `username` must be a valid GitHub handle.
+
+21. GITHUB_LIST_ORGANIZATIONS_FOR_THE_AUTHENTICATED_USER
+Lists organizations the authenticated GitHub user is a member of, returning details for each organization.
+
+22. GITHUB_LIST_PULL_REQUESTS
+Lists pull requests for a GitHub repository. REQUIRES 'owner' AND 'repo' parameters - both are MANDATORY and must be provided in every call. Does NOT support filtering by assignee or date range - use GITHUB_FIND_PULL_REQUESTS instead for searching PRs by assignee, author, or across multiple repositories.
+
+23. GITHUB_LIST_PULL_REQUESTS_FILES
+Lists all files (including additions, modifications, and removals) associated with a specific pull request in a GitHub repository.
+
+24. GITHUB_LIST_REPOSITORIES_FOR_THE_AUTHENTICATED_USER
+Lists repositories for the authenticated user; using 'type' with 'visibility' or 'affiliation' API parameters (not in this model) can cause a 422 error.
+
+25. GITHUB_LIST_REPOSITORIES_STARRED_BY_THE_AUTHENTICATED_USER
+Lists repositories the authenticated user has starred, optionally sorted and paginated, including star creation timestamps via 'application/vnd.github.star+json' media type.
+
+26. GITHUB_LIST_REPOSITORY_CONTRIBUTORS
+Lists contributors to a specified repository, sorted by number of contributions in descending order; the repository must exist and be accessible.
+
+27. GITHUB_LIST_REPOSITORY_ISSUES
+Lists issues (including pull requests) from a GitHub repository. Requires BOTH 'owner' AND 'repo' parameters (e.g., owner='octocat', repo='Hello-World' for github.com/octocat/Hello-World).
+
+28. GITHUB_LIST_STARGAZERS
+Lists users who have starred the specified GitHub repository, which must exist.
+
+29. GITHUB_STAR_A_REPOSITORY_FOR_THE_AUTHENTICATED_USER
+Stars a specified repository (identified by owner and repo name) for the authenticated user; this action is idempotent and succeeds even if the repository is already starred. Requires explicit repository identification via owner and repo parameters.
+
+30. GITHUB_UPDATE_A_REFERENCE
+Updates an existing Git reference (e.g., a branch or tag) to point to a specific commit SHA. By default, only allows fast-forward updates (where the new commit is a descendant of the current one). Set `force=true` to allow non-fast-forward updates that rewrite history. IMPORTANT: The reference must already exist - use 'Create a reference' action to create new refs.
+
+Tool Descriptions
+{
+    "name": "GITHUB_ADD_AN_EMAIL_ADDRESS_FOR_THE_AUTHENTICATED_USER",
+    "title": null,
+    "description": "Adds one or more email addresses (which will be initially unverified) to the authenticated user's GitHub account; use this to associate new emails, noting an email verified for another account will error, while an existing email for the current user is accepted.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "emails": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "Array of email addresses to add to the authenticated user account."
+            }
+        },
+        "required": [
+            "emails"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Add email for auth user",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "user:email"
+        ],
+        "updateHint": true
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_COMPARE_TWO_COMMITS",
+    "title": null,
+    "description": "Compares two commit points (commits, branches, tags, or SHAs) within a repository or across forks, using `BASE...HEAD` or `OWNER:REF...OWNER:REF` format for the `basehead` parameter.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "basehead": {
+                "type": "string",
+                "description": "A string specifying the base and head references to compare, in the format `BASE...HEAD`. `BASE` and `HEAD` can be branch names (e.g., `main...develop`), tag names (e.g., `v1.0.0...v1.1.0`), or commit SHAs (abbreviated or full 40-character format). Both abbreviated and full SHAs are accepted; full 40-character SHAs are recommended for reliability in large repositories. Both references must exist in the specified repository. To compare branches across forks in the same network, use the format `OWNER:REF...OWNER:REF` (e.g., `octocat:main...another-user:main`). Do NOT pass GitHub URLs - only plain reference strings like 'main...develop' are accepted.\nExamples:\n  \"main...develop\"\n  \"v1.0.0...v1.1.0\"\n  \"0e9c6b6...5f8d3a0\"\n  \"553c2077f0edc3d5dc5d17262f6aa498e69d6f8e...7fd1a60b01f91b314f59955a4e4d4e80d8edf11d\"\n  \"octocat:main...my-fork-user:main\""
+            },
+            "owner": {
+                "type": "string",
+                "description": "The username or organization name that owns the repository. This field is not case-sensitive.\nExamples:\n  \"octocat\"\n  \"my-organization\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number of the results to fetch, for pagination when the number of differences (commits or files) is large.\nExamples:\n  \"1\"\n  \"2\"",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of results (e.g., files or commits) to return per page, with a maximum of 100, for pagination.\nExamples:\n  \"30\"\n  \"100\"",
+                "default": 30
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository, without the `.git` extension. This field is not case-sensitive.\nExamples:\n  \"Spoon-Knife\"\n  \"my-project\""
+            }
+        },
+        "required": [
+            "basehead",
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Compare two commits",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo:read"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_CREATE_A_BLOB",
+    "title": null,
+    "description": "Creates a Git blob in a repository, requiring content and encoding ('utf-8' or 'base64'). Requires write access to the repository.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "content": {
+                "type": "string",
+                "description": "The content to be stored in the new blob.\nExamples:\n  \"This is the raw content of the file.\"\n  \"SGVsbG8gV29ybGQ=\\\\n\""
+            },
+            "encoding": {
+                "type": "string",
+                "description": "The encoding for the 'content'; \"utf-8\" or \"base64\".\nExamples:\n  \"utf-8\"\n  \"base64\"",
+                "default": "utf-8"
+            },
+            "owner": {
+                "type": "string",
+                "description": "The username or organization name that owns the repository. This field is not case-sensitive. You must have write access to the repository.\nExample: \"octocat\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository, without the '.git' extension. This field is not case-sensitive. The repository must exist and you must have write access to it.\nExample: \"Hello-World\""
+            }
+        },
+        "required": [
+            "content",
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Create a blob",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_CREATE_A_PULL_REQUEST",
+    "title": null,
+    "description": "Creates a pull request in a GitHub repository, requiring existing `base` and `head` branches; `title` or `issue` must be provided.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "base": {
+                "type": "string",
+                "description": "The name of the branch you want the changes pulled into. This must be an existing branch on the current (target) repository. You cannot submit a pull request to one repository that requests a merge to a base branch of another repository. \nExamples:\n  \"main\"\n  \"develop\""
+            },
+            "body": {
+                "type": "string",
+                "description": "The detailed description or contents of the pull request.\nExamples:\n  \"This PR introduces a new feature that does X, Y, and Z.\"\n  \"Fixes #42 by addressing the off-by-one error.\""
+            },
+            "draft": {
+                "type": "boolean",
+                "description": "Indicates whether the pull request should be created as a draft. Draft pull requests cannot be merged until marked as ready for review.\nExamples:\n  true\n  false"
+            },
+            "head": {
+                "type": "string",
+                "description": "The name of the branch where your changes are implemented. IMPORTANT: This branch must already exist in the repository (or fork) before calling this action. You must first create the branch and push commits to it (using git or the 'Create a reference' action), then create the PR. For cross-repository pull requests, namespace `head` with the source owner and branch, like `username:branch`.\nExamples:\n  \"feature-branch\"\n  \"octocat:my-feature-branch\""
+            },
+            "head_repo": {
+                "type": "string",
+                "description": "The name of the repository (e.g., 'octocat/Hello-World') where the changes in the pull request were made. This field is required for cross-repository pull requests if both the source and target repositories are owned by the same organization but are different repositories.\nExample: \"octocat/my-forked-repo\""
+            },
+            "issue": {
+                "type": "integer",
+                "description": "The number of an existing issue in the repository to convert into a pull request. If provided, the issue's title and body may be used for the pull request. Required if `title` is not specified.\nExamples:\n  \"123\"\n  \"456\""
+            },
+            "maintainer_can_modify": {
+                "type": "boolean",
+                "description": "Indicates whether maintainers of the upstream repository can modify the pull request. This is primarily relevant for pull requests originating from forks.\nExamples:\n  true\n  false"
+            },
+            "owner": {
+                "type": "string",
+                "description": "The account owner of the repository. This name is not case-sensitive.\nExample: \"octocat\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository, without the `.git` extension. This name is not case-sensitive.\nExample: \"Spoon-Knife\""
+            },
+            "title": {
+                "type": "string",
+                "description": "The title of the new pull request. Required unless `issue` is specified.\nExamples:\n  \"Amazing new feature\"\n  \"Fix for critical bug #123\""
+            }
+        },
+        "required": [
+            "base",
+            "head",
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Create a pull request",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_CREATE_A_REFERENCE",
+    "title": null,
+    "description": "Creates a NEW Git reference (branch or tag) in a repository. IMPORTANT: This action ONLY creates NEW references - if the reference already exists, it will fail with a 422 'Reference already exists' error. To update an existing reference, use the 'Update a reference' (GITHUB_UPDATE_A_REFERENCE) action instead. The repository must not be empty prior to this operation.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "The account owner of the repository. The name is not case sensitive.\nExample: \"octocat\""
+            },
+            "ref": {
+                "type": "string",
+                "description": "Fully qualified reference to create (e.g., `refs/heads/master`, `refs/tags/v1.0.0`). Must start with `refs/` and contain at least two slashes.\nExamples:\n  \"refs/heads/new-feature-branch\"\n  \"refs/tags/v1.2.3\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository without the `.git` extension. The name is not case sensitive.\nExample: \"Hello-World\""
+            },
+            "sha": {
+                "type": "string",
+                "description": "SHA-1 hash of an existing commit in the repository that the new reference will point to.\nExamples:\n  \"aa218f56b14c9653891f9e74264a383fa43fefbd\"\n  \"1234567890abcdef1234567890abcdef12345678\""
+            }
+        },
+        "required": [
+            "owner",
+            "ref",
+            "repo",
+            "sha"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Create a reference",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_CREATE_A_RELEASE",
+    "title": null,
+    "description": "Creates a release in a GitHub repository for a specified tag; the tag must be unique for published releases, and if a `discussion_category_name` is given, it must already exist.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "body": {
+                "type": "string",
+                "description": "A detailed description of the release. Markdown formatting is supported.\nExamples:\n  \"This release includes new features X, Y, and bug fixes for Z.\"\n  \"# New Features\\n- Feature A\\n- Feature B\""
+            },
+            "discussion_category_name": {
+                "type": "string",
+                "description": "If specified, a new discussion will be created in this category and linked to the release. The category must already exist in the repository's discussions.\nExamples:\n  \"Announcements\"\n  \"General\""
+            },
+            "draft": {
+                "type": "boolean",
+                "description": "Set to `true` to create an unpublished (draft) release. Defaults to `false`.",
+                "default": false
+            },
+            "generate_release_notes": {
+                "type": "boolean",
+                "description": "Set to `true` to automatically generate the release title (`name`) and description (`body`) from the commit history since the last release. Defaults to `false`.",
+                "default": false
+            },
+            "make_latest": {
+                "type": "string",
+                "description": "Specifies if this release should be marked as the latest for the repository. Valid values: 'true', 'false', 'legacy'. Defaults to 'true'. Draft releases and prereleases cannot be set as 'latest'.\nExamples:\n  \"true\"\n  \"false\"\n  \"legacy\"",
+                "default": "true"
+            },
+            "name": {
+                "type": "string",
+                "description": "The title of the release. If omitted and `generate_release_notes` is false, it defaults to the `tag_name`.\nExamples:\n  \"Version 1.0.0\"\n  \"My Awesome Release\""
+            },
+            "owner": {
+                "type": "string",
+                "description": "The account owner of the repository (username or organization name). This field is not case-sensitive.\nExamples:\n  \"octocat\"\n  \"my-company\""
+            },
+            "prerelease": {
+                "type": "boolean",
+                "description": "Set to `true` to identify this release as a pre-release. Defaults to `false`.",
+                "default": false
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository, without the .git extension. This field is not case-sensitive.\nExamples:\n  \"Spoon-Knife\"\n  \"our-awesome-project\""
+            },
+            "tag_name": {
+                "type": "string",
+                "description": "The name of the tag for this release. This tag must be unique for published releases.\nExamples:\n  \"v1.0.0\"\n  \"v1.0.1-alpha\""
+            },
+            "target_commitish": {
+                "type": "string",
+                "description": "Specifies the commitish value (e.g., branch name, tag name, or commit SHA) from which the Git tag is created. Defaults to the repository's default branch if the tag specified in `tag_name` doesn't exist yet.\nExamples:\n  \"main\"\n  \"develop\"\n  \"c1f67a4f091588259dd3f8a27378e170d40c8472\""
+            }
+        },
+        "required": [
+            "owner",
+            "repo",
+            "tag_name"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Create a release",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo",
+            "public_repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_CREATE_A_TREE",
+    "title": null,
+    "description": "Creates a new Git tree object in a repository, defining file/directory structure by specifying tree entries, optionally building on a `base_tree` SHA; all provided SHAs must be valid.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "base_tree": {
+                "type": "string",
+                "description": "SHA1 of an existing Git tree object to use as a base. If provided, its entries are combined with `tree` entries, where `tree` entries overwrite those from `base_tree` with the same path. Typically the SHA1 of the latest commit's tree for new branch changes. If omitted, the new tree is built from `tree` entries; files from the parent commit's tree not in `tree` are treated as deleted."
+            },
+            "owner": {
+                "type": "string",
+                "description": "The account owner of the repository. The name is not case sensitive."
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository without the `.git` extension. The name is not case sensitive. "
+            },
+            "tree": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": true
+                },
+                "description": "Array of objects defining the tree structure. Each object (node) requires `path` (string), `mode` (string; e.g., '100644' file, '100755' executable, '040000' subdirectory/tree, '160000' submodule, '120000' symlink), and `type` (string: 'blob', 'tree', or 'commit'). For new/updated blobs, provide `content` (UTF-8 string). For existing objects or `tree`/`commit` types, provide `sha` (string). To delete, specify `path`, `mode`, `type`, and set `sha` to `null`.\nExample: [{\"content\":\"Hello World!\",\"mode\":\"100644\",\"path\":\"new_file.txt\",\"type\":\"blob\"},{\"content\":\"# Markdown Content\",\"mode\":\"100644\",\"path\":\"subdir/another_file.md\",\"type\":\"blob\"}]"
+            }
+        },
+        "required": [
+            "owner",
+            "repo",
+            "tree"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Create a tree",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_CREATE_OR_UPDATE_FILE_CONTENTS",
+    "title": null,
+    "description": "Creates a new file or updates an existing file in a GitHub repository; SHA can be provided to validate file updates, automatically fetched if not provided.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "author__date": {
+                "type": "string",
+                "description": "Author's timestamp (ISO 8601 format). Defaults to committer's date if author details are provided but date is not.\nExample: \"2023-10-26T11:30:00Z\""
+            },
+            "author__email": {
+                "type": "string",
+                "description": "Author's email. If specified, `author_name` is also required. Defaults to committer details; if all committer/author details omitted, GitHub uses authenticated user.\nExample: \"jane.smith@example.com\""
+            },
+            "author__name": {
+                "type": "string",
+                "description": "Author's name. If specified, `author_email` is also required. Defaults to committer details; if all committer/author details omitted, GitHub uses authenticated user.\nExample: \"Jane Smith\""
+            },
+            "branch": {
+                "type": "string",
+                "description": "The branch name. Defaults to the repository's default branch if omitted. The branch must already exist; use GITHUB_CREATE_A_REFERENCE to create a new branch first.\nExamples:\n  \"main\"\n  \"develop\""
+            },
+            "committer__date": {
+                "type": "string",
+                "description": "Committer's commit timestamp (ISO 8601 format). Defaults to current time if committer details are provided but date is not.\nExample: \"2023-10-26T12:00:00Z\""
+            },
+            "committer__email": {
+                "type": "string",
+                "description": "Committer's email. If specified, `committer_name` is also required. GitHub uses authenticated user if all committer/author details omitted.\nExample: \"john.doe@example.com\""
+            },
+            "committer__name": {
+                "type": "string",
+                "description": "Committer's name. If specified, `committer_email` is also required. GitHub uses authenticated user if all committer/author details omitted.\nExample: \"John Doe\""
+            },
+            "content": {
+                "type": "string",
+                "description": "The new file content. Can be provided as plain text (will be automatically encoded to Base64) or as Base64-encoded text. GitHub API requires Base64 encoding, which this action handles automatically.\nExamples:\n  \"Hello World\"\n  \"SGVsbG8gV29ybGQ=\""
+            },
+            "message": {
+                "type": "string",
+                "description": "The commit message for this file creation or update.\nExamples:\n  \"feat: add new documentation\"\n  \"docs: update README\""
+            },
+            "owner": {
+                "type": "string",
+                "description": "The account owner of the repository (not case sensitive).\nExample: \"octocat\""
+            },
+            "path": {
+                "type": "string",
+                "description": "The full path to the file in the repository, including the filename and extension.\nExamples:\n  \"README.md\"\n  \"src/main.js\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository (not case sensitive, without the `.git` extension).\nExample: \"Spoon-Knife\""
+            },
+            "sha": {
+                "type": "string",
+                "description": "The blob SHA of the file being replaced. Automatically fetched if not provided. If a 409 conflict occurs (SHA mismatch due to concurrent modifications), the action will automatically retry up to 3 times with a refreshed SHA.\nExample: \"aa218f56b14c9653891f9e74264a383fa43fefbd\""
+            }
+        },
+        "required": [
+            "content",
+            "message",
+            "owner",
+            "path",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Create or update file contents",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo",
+            "public_repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_DELETE_A_REPOSITORY",
+    "title": null,
+    "description": "Permanently deletes the specified repository; this is a destructive, irreversible action that requires admin privileges for the repository.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "The account owner of the repository (user or organization); case-insensitive.\nExamples:\n  \"octocat\"\n  \"my-organization\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository, without the `.git` extension; case-insensitive.\nExamples:\n  \"hello-world\"\n  \"my-private-repo\""
+            }
+        },
+        "required": [
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Delete a repository",
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_FIND_PULL_REQUESTS",
+    "title": null,
+    "description": "Primary tool to find and search pull requests. Supports filtering by repository, author, state, labels, and merge status, and returns structured PR data for reliable use in workflows.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "assignee": {
+                "type": "string",
+                "description": "Filter by PR assignee username. Use '@me' for current user. The username must exist on GitHub. If the user doesn't exist, the search will fail with a 422 error.\nExamples:\n  \"octocat\"\n  \"@me\""
+            },
+            "author": {
+                "type": "string",
+                "description": "Filter by PR author username. The username must exist on GitHub and be accessible with your token. If the user doesn't exist, the search will fail with a 422 error.\nExamples:\n  \"octocat\"\n  \"defunkt\""
+            },
+            "base_branch": {
+                "type": "string",
+                "description": "Filter by base branch name.\nExamples:\n  \"main\"\n  \"master\"\n  \"develop\"\n  \"staging\""
+            },
+            "created_since": {
+                "type": "string",
+                "description": "Filter PRs created after this date (ISO 8601 format).\nExamples:\n  \"2024-01-01\"\n  \"2024-01-01T00:00:00Z\""
+            },
+            "for_authenticated_user": {
+                "type": "boolean",
+                "description": "Include private repositories accessible to the authenticated user in search results. When True, searches all repos (public and private) you have access to. When False, searches public repos only.\nExamples:\n  true\n  false",
+                "default": false
+            },
+            "head_branch": {
+                "type": "string",
+                "description": "Filter by head branch name.\nExamples:\n  \"feature/auth\"\n  \"bugfix/login\"\n  \"hotfix/critical\""
+            },
+            "is_merged": {
+                "type": "boolean",
+                "description": "Filter by merge status. True for merged PRs, False for unmerged, None for all.\nExamples:\n  true\n  false"
+            },
+            "label": {
+                "type": "string",
+                "description": "Filter by label name.\nExamples:\n  \"bug\"\n  \"enhancement\"\n  \"documentation\"\n  \"good first issue\""
+            },
+            "language": {
+                "type": "string",
+                "description": "Filter by programming language.\nExamples:\n  \"python\"\n  \"javascript\"\n  \"typescript\"\n  \"go\""
+            },
+            "mentions": {
+                "type": "string",
+                "description": "Filter by username mentioned in PR. The username must exist on GitHub. If the user doesn't exist, the search will fail with a 422 error.\nExamples:\n  \"octocat\"\n  \"@me\""
+            },
+            "order": {
+                "type": "string",
+                "enum": [
+                    "desc",
+                    "asc"
+                ],
+                "description": "Sort order (ascending or descending).\nExamples:\n  \"desc\"\n  \"asc\"",
+                "default": "desc"
+            },
+            "owner": {
+                "type": "string",
+                "description": "Filter by repository owner (user or organization). Can be used alone to search all repositories for an owner, or combined with repo parameter to specify owner and repo separately. The owner must exist and repositories must be accessible with your token.\nExamples:\n  \"facebook\"\n  \"microsoft\"\n  \"octocat\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number of results to fetch.\nExamples:\n  1\n  2\n  3",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of results per page (maximum 100).\nExamples:\n  10\n  20\n  50",
+                "default": 20
+            },
+            "query": {
+                "type": "string",
+                "description": "Optional search query for PR title, description, or commit messages. If not provided, PRs will be listed based on other filter parameters (repo, state, owner, etc.). Type qualifiers (type:pr, is:pr, is:issue, type:issue) are automatically normalized.\nExamples:\n  \"bug fix\"\n  \"feature auth\"\n  \"refactor api\"\n  \"fix typescript\"\n  null"
+            },
+            "raw_response": {
+                "type": "boolean",
+                "description": "Return full API response if true, optimized response for AI agents if false.\nExamples:\n  true\n  false",
+                "default": false
+            },
+            "repo": {
+                "type": "string",
+                "description": "Filter by specific repository. Can be provided in 'owner/repo' format, or as just the repo name when used with the owner parameter. The repository must exist and be accessible with your token (public repos or private repos you have access to).\nExamples:\n  \"facebook/react\"\n  \"microsoft/vscode\"\n  \"octocat/Hello-World\"\n  \"react\""
+            },
+            "sort": {
+                "type": "string",
+                "enum": [
+                    "comments",
+                    "reactions",
+                    "interactions",
+                    "created",
+                    "updated"
+                ],
+                "description": "Field to sort results by.\nExamples:\n  \"updated\"\n  \"created\"\n  \"comments\"",
+                "default": "updated"
+            },
+            "state": {
+                "type": "string",
+                "description": "Filter by PR state: 'open', 'closed', or 'all'.\nExamples:\n  \"open\"\n  \"closed\"\n  \"all\"",
+                "default": "open"
+            },
+            "updated_since": {
+                "type": "string",
+                "description": "Filter PRs updated after this date (ISO 8601 format).\nExamples:\n  \"2024-01-01\"\n  \"2024-01-01T00:00:00Z\""
+            }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Find Pull Requests",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo",
+            "public_repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_FIND_REPOSITORIES",
+    "title": null,
+    "description": "AI-optimized repository search with smart filtering by language, stars, topics, and ownership. Builds intelligent search queries and returns clean, actionable repository data.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "archived": {
+                "type": "boolean",
+                "description": "Filter by archived status. None means include both.\nExamples:\n  true\n  false"
+            },
+            "for_authenticated_user": {
+                "type": "boolean",
+                "description": "Search only in repositories accessible to the authenticated user (including private repos).\nExamples:\n  true\n  false",
+                "default": false
+            },
+            "fork_filter": {
+                "type": "string",
+                "description": "How to handle forks: 'include' (include forks), 'exclude' (exclude forks), 'only' (only forks).\nExamples:\n  \"include\"\n  \"exclude\"\n  \"only\"",
+                "default": "exclude"
+            },
+            "language": {
+                "type": "string",
+                "description": "Filter by programming language.\nExamples:\n  \"python\"\n  \"javascript\"\n  \"typescript\"\n  \"go\""
+            },
+            "max_stars": {
+                "type": "integer",
+                "description": "Maximum number of stars the repository should have.\nExamples:\n  50\n  500\n  5000"
+            },
+            "min_forks": {
+                "type": "integer",
+                "description": "Minimum number of forks the repository should have.\nExamples:\n  5\n  50\n  100"
+            },
+            "min_stars": {
+                "type": "integer",
+                "description": "Minimum number of stars the repository should have.\nExamples:\n  10\n  100\n  1000"
+            },
+            "order": {
+                "type": "string",
+                "enum": [
+                    "desc",
+                    "asc"
+                ],
+                "description": "Sort order (ascending or descending).\nExamples:\n  \"desc\"\n  \"asc\"",
+                "default": "desc"
+            },
+            "owner": {
+                "type": "string",
+                "description": "Filter by specific user or organization. Do NOT use this parameter if your 'query' already contains 'user:', 'org:', or 'repo:' qualifiers - they will conflict. Use either 'owner' parameter OR search qualifiers in 'query', not both.\nExamples:\n  \"facebook\"\n  \"microsoft\"\n  \"torvalds\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number of results to fetch.\nExamples:\n  1\n  2\n  3",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of results per page (maximum 100).\nExamples:\n  10\n  20\n  50",
+                "default": 20
+            },
+            "query": {
+                "type": "string",
+                "description": "Search query for repository name, description, or README content. Accepts both 'query' and 'q' as parameter names. Supports OR operator for alternatives (e.g., 'bug OR error'). Multi-word phrases in OR expressions are automatically quoted. GitHub limits OR expressions to 6 terms maximum; queries exceeding this limit are truncated. If using GitHub qualifiers like 'repo:', 'user:', or 'org:', they must be properly formatted (e.g., 'repo:owner/name', 'user:username', 'org:orgname'). Note: 'owner:' is not a valid GitHub qualifier; if used, it will be automatically transformed to 'user:'.\nExamples:\n  \"react typescript\"\n  \"machine learning python\"\n  \"web scraper\"\n  \"bug OR error OR issue\"\n  \"repo:facebook/react\"\n  \"user:torvalds\"\n  \"org:microsoft node\""
+            },
+            "raw_response": {
+                "type": "boolean",
+                "description": "Return full API response if true, optimized response for AI agents if false.\nExamples:\n  true\n  false",
+                "default": false
+            },
+            "sort": {
+                "type": "string",
+                "enum": [
+                    "stars",
+                    "forks",
+                    "help-wanted-issues",
+                    "updated"
+                ],
+                "description": "Field to sort results by.\nExamples:\n  \"stars\"\n  \"forks\"\n  \"updated\"",
+                "default": "stars"
+            },
+            "topic": {
+                "type": "string",
+                "description": "Filter by repository topic/tag.\nExamples:\n  \"web\"\n  \"api\"\n  \"machine-learning\"\n  \"frontend\""
+            }
+        },
+        "required": [
+            "query"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Find Repositories",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo",
+            "public_repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_GET_A_BLOB",
+    "title": null,
+    "description": "Retrieves the raw, typically Base64-encoded, content of a file (blob) from a GitHub repository using its SHA hash, if the repository and blob SHA exist.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "file_sha": {
+                "type": "string",
+                "description": "The SHA-1 hash of the file (blob) to retrieve.\nExample: \"e69de29bb2d1d6434b8b29ae775ad8c2e48c5391\""
+            },
+            "owner": {
+                "type": "string",
+                "description": "The username or organization name that owns the repository. This field is not case-sensitive.\nExamples:\n  \"octocat\"\n  \"github\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository, without the '.git' extension. This field is not case-sensitive.\nExamples:\n  \"Hello-World\"\n  \"Spoon-Knife\""
+            }
+        },
+        "required": [
+            "file_sha",
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Get a blob",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo",
+            "public_repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_GET_A_PULL_REQUEST",
+    "title": null,
+    "description": "Retrieves a specific pull request from a GitHub repository using its owner, repository name, and pull request number.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "The username of the account that owns the repository. This value is not case sensitive.\nExample: \"octocat\""
+            },
+            "pull_number": {
+                "type": "integer",
+                "description": "The number that identifies the specific pull request.\nExample: 1347"
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository, without the .git extension. This value is not case sensitive.\nExample: \"Hello-World\""
+            }
+        },
+        "required": [
+            "owner",
+            "pull_number",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Get a pull request",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_GET_A_REFERENCE",
+    "title": null,
+    "description": "Retrieves a specific Git reference (e.g., a branch, tag, or fully qualified like 'heads/main') from a GitHub repository. The reference must exist in the repository; use 'list_matching_references' first if unsure what references are available.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "The username or organization name that owns the repository. This field is not case-sensitive.\nExamples:\n  \"octocat\"\n  \"google\""
+            },
+            "ref": {
+                "type": "string",
+                "description": "The Git reference to retrieve. IMPORTANT: The reference must actually exist in the repository; a 404 error will be returned if it does not exist. If you're unsure which references exist, use the 'list_matching_references' or 'get_a_branch' action first to discover available branches/tags. Must be formatted as `heads/<branch_name>` for branches or `tags/<tag_name>` for tags. Simple branch/tag names (e.g., `main`) will automatically be converted to `heads/<name>`. Use full format when retrieving tags (e.g., `tags/v1.0.0`). Note: Not all repositories use 'master'; many now use 'main' as the default branch.\nExamples:\n  \"heads/main\"\n  \"tags/v1.2.3\"\n  \"heads/feature-branch\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository, without the `.git` extension. This field is not case-sensitive.\nExamples:\n  \"Hello-World\"\n  \"mercury\""
+            }
+        },
+        "required": [
+            "owner",
+            "ref",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Get a reference",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "public_repo",
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_GET_A_TREE",
+    "title": null,
+    "description": "Browse and list all files/directories in a GitHub repository. Efficiently retrieves the complete repository structure in a single API call when used with recursive mode. Perfect for analyzing codebase structure, finding specific files, or getting an overview of repository contents without cloning.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "Repository owner username or organization name (e.g., for github.com/kubernetes/kubernetes, owner is 'kubernetes').\nExamples:\n  \"octocat\"\n  \"kubernetes\"\n  \"ComposioHQ\""
+            },
+            "recursive": {
+                "type": [
+                    "string",
+                    "boolean"
+                ],
+                "description": "Set to True (or '1'/'true') to fetch the ENTIRE repository file tree recursively (all files and directories in one call). Set to False or leave empty to fetch only the top-level files/folders. For browsing or analyzing the full repository structure, use recursive=True.\nExamples:\n  true\n  false\n  \"1\"\n  \"true\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "Repository name without owner or .git extension (e.g., for github.com/kubernetes/kubernetes, repo is 'kubernetes').\nExamples:\n  \"Spoon-Knife\"\n  \"enhancements\"\n  \"mercury\""
+            },
+            "tree_sha": {
+                "type": "string",
+                "description": "Branch name (e.g., 'main', 'master'), tag name (e.g., 'v1.0.0'), or commit SHA to retrieve the tree from. Use branch name to get the current state of that branch.\nExamples:\n  \"main\"\n  \"master\"\n  \"develop\"\n  \"v1.25.0\"\n  \"a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0\""
+            }
+        },
+        "required": [
+            "owner",
+            "repo",
+            "tree_sha"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List repository files and directories",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_GET_RAW_REPOSITORY_CONTENT",
+    "title": null,
+    "description": "Tool to fetch raw file content from a GitHub repository. Use when you need the raw bytes of a file in the repo.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "The GitHub username or organization name that owns the repository. This is the account name shown in the repository URL (e.g., for github.com/torvalds/linux, the owner is 'torvalds'). Case-insensitive.\nExamples:\n  \"octocat\"\n  \"torvalds\"\n  \"facebook\""
+            },
+            "path": {
+                "type": "string",
+                "description": "The file path within the repository, relative to the repository root. Use forward slashes for directory separators (e.g., 'src/utils/helper.js'). Do not include leading slash. Do NOT pass a full GitHub URL - only the relative path within the repo.\nExamples:\n  \"README.md\"\n  \"docs/index.html\"\n  \"src/main.py\""
+            },
+            "ref": {
+                "type": "string",
+                "description": "The branch name, tag name, or commit SHA to fetch the file from. Defaults to the repository's default branch (usually 'main' or 'master').\nExamples:\n  \"main\"\n  \"master\"\n  \"v1.0.0\"\n  \"develop\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "The repository name (not the full URL). This is the repository name shown in the repository URL (e.g., for github.com/torvalds/linux, the repo is 'linux'). Do not include '.git' suffix. Case-insensitive.\nExamples:\n  \"Hello-World\"\n  \"linux\"\n  \"react\""
+            }
+        },
+        "required": [
+            "owner",
+            "path",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Get Raw Repository Content",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false,
+        "scopes": [],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_GET_REPOSITORY_CONTENT",
+    "title": null,
+    "description": "Retrieves a file's Base64 encoded content or lists a directory's contents from a GitHub repository.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "Required. The account owner of the repository. This name is not case sensitive.\nExample: \"octocat\""
+            },
+            "path": {
+                "type": "string",
+                "description": "Required. The path to the content in the repository. This can be a file or a directory path. Use an empty string to retrieve the contents of the repository's root directory. Leading slashes are automatically stripped (e.g., '/src/main.js' becomes 'src/main.js'). IMPORTANT: Paths are case-sensitive and must match the exact casing in the repository (e.g., 'Docker' is different from 'docker'). If you receive a 404 'Not Found' error, verify the exact path by first listing the parent directory contents.\nExamples:\n  \"README.md\"\n  \"src/main.js\"\n  \"docs\"\n  \"\""
+            },
+            "ref": {
+                "type": "string",
+                "description": "The name of the commit, branch, or tag. If not provided, the repository's default branch will be used.\nExamples:\n  \"main\"\n  \"v1.2.0\"\n  \"c8bca7c6a66f490c70b29cf3ac3d64070049ea73\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "Required. The name of the repository, without the `.git` extension. This name is not case sensitive.\nExample: \"Spoon-Knife\""
+            }
+        },
+        "required": [
+            "owner",
+            "path",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Get repository content",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo",
+            "public_repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_BRANCHES",
+    "title": null,
+    "description": "Lists branches for an existing GitHub repository, with an option to filter by protection status.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "Account owner's username (case-insensitive).\nExamples:\n  \"octocat\"\n  \"torvalds\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number for paginated results.",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of results per page (max 100).",
+                "default": 30
+            },
+            "protected": {
+                "type": "boolean",
+                "description": "Filter by protection status: `true` for protected, `false` for unprotected; omit for all branches."
+            },
+            "repo": {
+                "type": "string",
+                "description": "Repository name, excluding `.git` extension (case-insensitive).\nExamples:\n  \"Spoon-Knife\"\n  \"linux\""
+            }
+        },
+        "required": [
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List branches",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_DEPLOYMENTS",
+    "title": null,
+    "description": "Lists deployments for a specified repository; repository must exist.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "environment": {
+                "type": "string",
+                "description": "Filter by the environment name to which deployed.\nExamples:\n  \"production\"\n  \"staging\"\n  \"development\""
+            },
+            "owner": {
+                "type": "string",
+                "description": "The account owner of the repository. This name is not case sensitive.\nExample: \"octocat\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "The page number of the results to retrieve. For more information, see \"[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api).\"",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "The number of results to display per page (maximum 100). For more information, see \"[Using pagination in the REST API](https://docs.github.com/rest/using-the-rest-api/using-pagination-in-the-rest-api).\"",
+                "default": 30
+            },
+            "ref": {
+                "type": "string",
+                "description": "Filter by the ref name (branch, tag, or commit SHA).\nExamples:\n  \"main\"\n  \"users/USERNAME/featureBranch\"\n  \"v1.2.3\"\n  \"c5b97d5ae6c19d5c5df71a34c7fbeeda2479ccbc\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository, without the `.git` extension. This name is not case sensitive.\nExample: \"hello-world\""
+            },
+            "sha": {
+                "type": "string",
+                "description": "Filter by the commit SHA recorded when the deployment was created.\nExamples:\n  \"c5b97d5ae6c19d5c5df71a34c7fbeeda2479ccbc\"\n  \"0000000000000000000000000000000000000000\""
+            },
+            "task": {
+                "type": "string",
+                "description": "Filter by the task name specified for the deployment.\nExamples:\n  \"deploy\"\n  \"deploy:migrations\""
+            }
+        },
+        "required": [
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List deployments",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo_deployment"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_ORGANIZATIONS_FOR_A_USER",
+    "title": null,
+    "description": "Lists public organizations for a specified GitHub user; the `username` must be a valid GitHub handle.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "page": {
+                "type": "integer",
+                "description": "Page number of the results to fetch.\nExamples:\n  \"1\"\n  \"2\"\n  \"10\"",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of results per page (maximum 100).\nExamples:\n  \"30\"\n  \"50\"\n  \"100\"",
+                "default": 30
+            },
+            "username": {
+                "type": "string",
+                "description": "GitHub username (handle) of the user.\nExamples:\n  \"octocat\"\n  \"torvalds\"\n  \"github\""
+            }
+        },
+        "required": [
+            "username"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List organizations for a user",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "read:org"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_ORGANIZATIONS_FOR_THE_AUTHENTICATED_USER",
+    "title": null,
+    "description": "Lists organizations the authenticated GitHub user is a member of, returning details for each organization.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "page": {
+                "type": "integer",
+                "description": "The page number of the results to retrieve, used for pagination. Default is 1.\nExamples:\n  \"1\"\n  \"2\"\n  \"10\"",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "The number of organization results to return per page. Default is 30, maximum is 100.\nExamples:\n  \"30\"\n  \"50\"\n  \"100\"",
+                "default": 30
+            }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List organizations for the authenticated user",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "user",
+            "read:org"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_PULL_REQUESTS",
+    "title": null,
+    "description": "Lists pull requests for a GitHub repository. REQUIRES 'owner' AND 'repo' parameters - both are MANDATORY and must be provided in every call. Does NOT support filtering by assignee or date range - use GITHUB_FIND_PULL_REQUESTS instead for searching PRs by assignee, author, or across multiple repositories.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "base": {
+                "type": "string",
+                "description": "Filter by base branch name.\nExamples:\n  \"main\"\n  \"develop\"\n  \"gh-pages\""
+            },
+            "direction": {
+                "type": "string",
+                "description": "Sort direction. Valid values: 'asc', 'desc'. Defaults to 'desc' if sort is 'created' or unspecified, else 'asc'.\nExamples:\n  \"asc\"\n  \"desc\""
+            },
+            "head": {
+                "type": "string",
+                "description": "Filter by head user/org and branch name, e.g., `user:ref-name`.\nExamples:\n  \"octocat:test-branch\"\n  \"github:new-script-format\""
+            },
+            "owner": {
+                "type": "string",
+                "description": "[REQUIRED - MUST BE PROVIDED] The GitHub username or organization name that owns the repository. This parameter is mandatory and cannot be omitted. Example: 'octocat' or 'microsoft'. To search PRs across all repos without specifying owner, use GITHUB_FIND_PULL_REQUESTS instead.\nExamples:\n  \"octocat\"\n  \"my-organization\"\n  \"microsoft\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number for results.\nExamples:\n  \"1\"\n  \"2\"\n  \"5\"",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of results per page (maximum 100).\nExamples:\n  \"30\"\n  \"50\"\n  \"100\"",
+                "default": 30
+            },
+            "repo": {
+                "type": "string",
+                "description": "[REQUIRED - MUST BE PROVIDED] The name of the repository (without the `.git` extension). This parameter is mandatory and cannot be omitted. Example: 'Spoon-Knife' or 'vscode'. To search PRs across multiple repos, use GITHUB_FIND_PULL_REQUESTS instead.\nExamples:\n  \"Spoon-Knife\"\n  \"my-project\"\n  \"vscode\""
+            },
+            "sort": {
+                "type": "string",
+                "description": "Sorts results. Valid values: 'created', 'updated', 'popularity', 'long-running'. 'popularity' is by comment count; 'long-running' by age and recent activity.\nExamples:\n  \"created\"\n  \"updated\"\n  \"popularity\"\n  \"long-running\"",
+                "default": "created"
+            },
+            "state": {
+                "type": "string",
+                "description": "Filter by pull request state. Valid values: 'open', 'closed', 'all'.\nExamples:\n  \"open\"\n  \"closed\"\n  \"all\"",
+                "default": "open"
+            }
+        },
+        "required": [
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List pull requests",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_PULL_REQUESTS_FILES",
+    "title": null,
+    "description": "Lists all files (including additions, modifications, and removals) associated with a specific pull request in a GitHub repository.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "The account owner of the repository (e.g., a GitHub username or organization name). This field is not case sensitive.\nExamples:\n  \"octocat\"\n  \"my-organization\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number of the results to retrieve for pagination.\nExamples:\n  \"1\"\n  \"2\"\n  \"10\"",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of file results to return per page (max 100).\nExamples:\n  \"30\"\n  \"50\"\n  \"100\"",
+                "default": 30
+            },
+            "pull_number": {
+                "type": "integer",
+                "description": "The numeric identifier of the pull request whose files are to be listed.\nExamples:\n  \"1\"\n  \"123\"\n  \"42\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "The name of the repository, without the `.git` extension. This field is not case sensitive.\nExamples:\n  \"Hello-World\"\n  \"my-cool-project\""
+            }
+        },
+        "required": [
+            "owner",
+            "pull_number",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List pull requests files",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo:read"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_REPOSITORIES_FOR_THE_AUTHENTICATED_USER",
+    "title": null,
+    "description": "Lists repositories for the authenticated user; using 'type' with 'visibility' or 'affiliation' API parameters (not in this model) can cause a 422 error.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "before": {
+                "type": "string",
+                "description": "Filters for repositories updated before this specified time. Provide as an ISO 8601 formatted timestamp.\nExamples:\n  \"2024-01-01T00:00:00Z\"\n  \"2024-03-20T18:45:00+00:00\""
+            },
+            "direction": {
+                "type": "string",
+                "enum": [
+                    "asc",
+                    "desc"
+                ],
+                "description": "The direction of the sort. Defaults to `asc` when `sort` is 'full_name', and `desc` otherwise.\nExamples:\n  \"asc\"\n  \"desc\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number of results to fetch.\nExamples:\n  \"1\"\n  \"2\"\n  \"10\"",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "The number of results to return per page (maximum 100).\nExamples:\n  \"30\"\n  \"50\"\n  \"100\"",
+                "default": 30
+            },
+            "since": {
+                "type": "string",
+                "description": "Filters for repositories updated at or after this specified time. Provide as an ISO 8601 formatted timestamp.\nExamples:\n  \"2023-01-01T00:00:00Z\"\n  \"2023-05-15T10:30:00-07:00\""
+            },
+            "sort": {
+                "type": "string",
+                "enum": [
+                    "created",
+                    "updated",
+                    "pushed",
+                    "full_name"
+                ],
+                "description": "The repository property by which to sort the results.\nExamples:\n  \"created\"\n  \"full_name\"\n  \"updated\"",
+                "default": "full_name"
+            },
+            "type": {
+                "type": "string",
+                "enum": [
+                    "all",
+                    "owner",
+                    "public",
+                    "private",
+                    "member"
+                ],
+                "description": "Filters the results to repositories of the specified type.\nExamples:\n  \"all\"\n  \"owner\"\n  \"member\"",
+                "default": "all"
+            }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List repositories for the authenticated user",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo",
+            "public_repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_REPOSITORIES_STARRED_BY_THE_AUTHENTICATED_USER",
+    "title": null,
+    "description": "Lists repositories the authenticated user has starred, optionally sorted and paginated, including star creation timestamps via 'application/vnd.github.star+json' media type.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "direction": {
+                "type": "string",
+                "enum": [
+                    "asc",
+                    "desc"
+                ],
+                "description": "Sort direction: 'asc' (ascending) or 'desc' (descending).\nExamples:\n  \"asc\"\n  \"desc\"",
+                "default": "desc"
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number of results (starts from 1).\nExamples:\n  \"1\"\n  \"2\"\n  \"5\"",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of results per page (max 100). Defaults to 30.\nExamples:\n  \"30\"\n  \"50\"\n  \"100\"",
+                "default": 30
+            },
+            "sort": {
+                "type": "string",
+                "enum": [
+                    "created",
+                    "updated"
+                ],
+                "description": "Sorts starred repositories by 'created' (date starred) or 'updated' (date last pushed).\nExamples:\n  \"created\"\n  \"updated\"",
+                "default": "created"
+            }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List repositories starred by the authenticated user",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_REPOSITORY_CONTRIBUTORS",
+    "title": null,
+    "description": "Lists contributors to a specified repository, sorted by number of contributions in descending order; the repository must exist and be accessible.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "anon": {
+                "type": "string",
+                "description": "Set to '1' or 'true' to include anonymous contributors. If omitted, anonymous contributors are not included.\nExamples:\n  \"1\"\n  \"true\""
+            },
+            "owner": {
+                "type": "string",
+                "description": "Username of the account owning the repository. Not case-sensitive.\nExample: \"octocat\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number of results to retrieve (1-based indexing).",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of contributor results per page. Maximum value is 100.",
+                "default": 30
+            },
+            "repo": {
+                "type": "string",
+                "description": "Name of the repository (without `.git` extension). Not case-sensitive.\nExample: \"Spoon-Knife\""
+            }
+        },
+        "required": [
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List repository contributors",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_REPOSITORY_ISSUES",
+    "title": null,
+    "description": "Lists issues (including pull requests) from a GitHub repository. Requires BOTH 'owner' AND 'repo' parameters (e.g., owner='octocat', repo='Hello-World' for github.com/octocat/Hello-World).",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "assignee": {
+                "type": "string",
+                "description": "Filter issues by assignee's username. Use 'none' for issues with no assignee, or '*' for issues assigned to any user.\nExamples:\n  \"codertocat\"\n  \"none\"\n  \"*\""
+            },
+            "creator": {
+                "type": "string",
+                "description": "Filter issues by the username of the user who created the issue.\nExample: \"octocat\""
+            },
+            "direction": {
+                "type": "string",
+                "enum": [
+                    "asc",
+                    "desc"
+                ],
+                "description": "The direction of the sort.\nExamples:\n  \"asc\"\n  \"desc\"",
+                "default": "desc"
+            },
+            "labels": {
+                "type": "string",
+                "description": "A comma-separated list of label names to filter issues by. Example: 'bug,ui,@high'.\nExamples:\n  \"bug,ui,@high\"\n  \"enhancement\"\n  \"help wanted,good first issue\""
+            },
+            "mentioned": {
+                "type": "string",
+                "description": "Filter issues by a user mentioned in the issue's description or comments. Provide the username.\nExamples:\n  \"octodocs\"\n  \"hubot\""
+            },
+            "milestone": {
+                "type": "string",
+                "description": "Filter issues by milestone. Provide the milestone `number` as a string, '*' for issues with any milestone, or 'none' for issues without a milestone.\nExamples:\n  \"1\"\n  \"*\"\n  \"none\""
+            },
+            "owner": {
+                "type": "string",
+                "description": "REQUIRED. The GitHub account owner (user or organization) of the repository. For 'octocat/Hello-World', owner is 'octocat'. Not case-sensitive. Must be provided together with 'repo'.\nExamples:\n  \"octocat\"\n  \"microsoft\"\n  \"facebook\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number for the set of results. Refer to GitHub's REST API documentation for pagination details.\nExamples:\n  \"1\"\n  \"5\"",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of results per page (max 100). Default is 30, which matches GitHub's API default. Refer to GitHub's REST API documentation for pagination details.\nExamples:\n  \"30\"\n  \"100\"",
+                "default": 30
+            },
+            "repo": {
+                "type": "string",
+                "description": "REQUIRED. The name of the repository (without .git extension). For 'octocat/Hello-World', repo is 'Hello-World'. Not case-sensitive. Must be provided together with 'owner'.\nExamples:\n  \"Hello-World\"\n  \"vscode\"\n  \"react\""
+            },
+            "since": {
+                "type": "string",
+                "description": "Filters issues to include only those updated at or after the specified time. This should be a timestamp in ISO 8601 format (e.g., `YYYY-MM-DDTHH:MM:SSZ`).\nExamples:\n  \"2023-01-15T10:00:00Z\"\n  \"2024-03-10T00:00:00+05:30\""
+            },
+            "sort": {
+                "type": "string",
+                "enum": [
+                    "created",
+                    "updated",
+                    "comments"
+                ],
+                "description": "The field to sort the results by.\nExamples:\n  \"created\"\n  \"updated\"\n  \"comments\"",
+                "default": "created"
+            },
+            "state": {
+                "type": "string",
+                "enum": [
+                    "open",
+                    "closed",
+                    "all"
+                ],
+                "description": "Filters issues based on their state.\nExamples:\n  \"open\"\n  \"closed\"\n  \"all\"",
+                "default": "open"
+            },
+            "type": {
+                "type": "string",
+                "description": "Filter issues by type name. Use '*' for issues with any type, 'none' for issues without a type, or specify a type name.\nExamples:\n  \"bug\"\n  \"feature\"\n  \"*\"\n  \"none\""
+            }
+        },
+        "required": [
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List repository issues",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_LIST_STARGAZERS",
+    "title": null,
+    "description": "Lists users who have starred the specified GitHub repository, which must exist.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "Username of the account owner (user or organization) of the repository; case-insensitive.\nExamples:\n  \"octocat\"\n  \"google\""
+            },
+            "page": {
+                "type": "integer",
+                "description": "Page number of the results to fetch.\nExamples:\n  \"1\"\n  \"2\"\n  \"10\"",
+                "default": 1
+            },
+            "per_page": {
+                "type": "integer",
+                "description": "Number of results to display per page (max 100).\nExamples:\n  \"30\"\n  \"50\"\n  \"100\"",
+                "default": 30
+            },
+            "repo": {
+                "type": "string",
+                "description": "Name of the repository, without the `.git` extension; case-insensitive.\nExamples:\n  \"Spoon-Knife\"\n  \"mercury\""
+            }
+        },
+        "required": [
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "List stargazers",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true,
+        "scopes": [
+            "repo:read"
+        ],
+        "updateHint": false
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_STAR_A_REPOSITORY_FOR_THE_AUTHENTICATED_USER",
+    "title": null,
+    "description": "Stars a specified repository (identified by owner and repo name) for the authenticated user; this action is idempotent and succeeds even if the repository is already starred. Requires explicit repository identification via owner and repo parameters.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "owner": {
+                "type": "string",
+                "description": "Required. The username of the account that owns the repository. This field is not case-sensitive.\nExamples:\n  \"octocat\"\n  \"torvalds\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "Required. The name of the repository, without the `.git` extension. This field is not case-sensitive.\nExamples:\n  \"hello-world\"\n  \"linux\""
+            }
+        },
+        "required": [
+            "owner",
+            "repo"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Star a specified repository (requires owner and repo)",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": true
+    },
+    "meta": null
+}
+{
+    "name": "GITHUB_UPDATE_A_REFERENCE",
+    "title": null,
+    "description": "Updates an existing Git reference (e.g., a branch or tag) to point to a specific commit SHA. By default, only allows fast-forward updates (where the new commit is a descendant of the current one). Set `force=true` to allow non-fast-forward updates that rewrite history. IMPORTANT: The reference must already exist - use 'Create a reference' action to create new refs.",
+    "inputSchema": {
+        "type": "object",
+        "properties": {
+            "force": {
+                "type": "boolean",
+                "description": "Controls whether to allow non-fast-forward updates. When `false` (default), the new commit must be a direct descendant of the current commit (fast-forward only) - this prevents accidental history rewriting. When `true`, allows moving the reference to any commit, even if it means rewriting history or moving backward. Set to `true` only when you need to force-push changes, reset a branch, or intentionally rewrite commit history.",
+                "default": false
+            },
+            "owner": {
+                "type": "string",
+                "description": "Account owner of the repository (case-insensitive).\nExample: \"octocat\""
+            },
+            "ref": {
+                "type": "string",
+                "description": "The name of the Git reference to update WITHOUT the 'refs/' prefix. For branches: use 'heads/<branch-name>' (e.g., 'heads/main', 'heads/feature-branch'). For tags: use 'tags/<tag-name>' (e.g., 'tags/v1.0.0'). Note: Branch references require 'heads/' (plural), not 'head/' (singular). Bare branch names will be automatically prefixed with 'heads/'. The reference must already exist - this endpoint only updates existing refs.\nExamples:\n  \"heads/main\"\n  \"tags/v1.0.0\"\n  \"heads/feature-branch\""
+            },
+            "repo": {
+                "type": "string",
+                "description": "Repository name, excluding `.git` extension (case-insensitive).\nExample: \"Hello-World\""
+            },
+            "sha": {
+                "type": "string",
+                "description": "The SHA1 commit hash to point this reference to. Must be exactly 40 hexadecimal characters (0-9, a-f) representing a valid commit that exists in the repository.\nExample: \"aa218f56b14c9653891f9e74264a383fa43fefbd\""
+            }
+        },
+        "required": [
+            "owner",
+            "ref",
+            "repo",
+            "sha"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+    },
+    "outputSchema": null,
+    "icons": null,
+    "annotations": {
+        "title": "Update a reference",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true,
+        "scopes": [
+            "repo"
+        ],
+        "updateHint": true
+    },
+    "meta": null
+}

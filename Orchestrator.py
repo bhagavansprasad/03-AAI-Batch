@@ -6,11 +6,12 @@ from LLMReviewAgent import llm_review_graph
 from JiraTicketAgent import jira_Ticket_graph
 from GitWriteAgent import git_Write_graph
 import json
+import asyncio
 
 
-def invoke_git_graph(pr_url:str):
+async def invoke_git_graph(pr_url:str):
     data = {'pr_details' : pr_url}
-    git_return_value = git_read_graph.invoke(data)
+    git_return_value = await git_read_graph.ainvoke(data)
     #print(git_return_value)
     return {'file_list':git_return_value['file_list'], 'diff':git_return_value['diff']} 
 
@@ -63,9 +64,9 @@ def orchestrator_init_node(state: OrchestraterData ):
     state['git_write_result'] = False
     return state
 
-def git_read_agent_node(state: OrchestraterData ):
+async def git_read_agent_node(state: OrchestraterData ):
     print(f"[ORCH] In git_read_agent_node -> state: {state}")
-    state["git_read_result"] = invoke_git_graph(state['pr_details'])
+    state["git_read_result"] = await invoke_git_graph(state['pr_details'])
     return state
 
 def llm_agent_node(state: OrchestraterData ):
@@ -113,14 +114,15 @@ def graph_Builder():
 
 orchestrator_graph = graph_Builder()  
 
-def main():
+async def main():
     #quotation = graph_Builder()   
     data = {'pr_details' : 'https://github.com/promptlyaig/issue-tracker/pull/1'}
     
-    final_state = orchestrator_graph.invoke(data)
+    final_state = await orchestrator_graph.ainvoke(data)
+    
     tstr = json.dumps(final_state,  sort_keys=True, indent=4)
     print(tstr)
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
 

@@ -1,1 +1,7 @@
+*.pyc
 __pycache__
+__pycache__/GitReadAgent.cpython-312.pyc
+__pycache__/GitWriteAgent.cpython-312.pyc
+__pycache__/JiraTicketAgent.cpython-312.pyc
+__pycache__/lg_utility.cpython-312.pyc
+__pycache__/GitReadAgent.cpython-312.pyc
