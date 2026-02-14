@@ -2,6 +2,8 @@
 import os
 from langgraph.graph import MessagesState
 from langchain_core.runnables.graph_mermaid import MermaidDrawMethod
+from typing import Any, List, Dict
+import json
 
 # def save_graph_as_png(graph, filename=None):
 #     if filename is None:
@@ -35,3 +37,15 @@ def save_graph_as_png(graph, filename="gsheet_agent_graph"):
             print(f"   Visualize at: https://mermaid.live/")
         except Exception as e2:
             print(f"   Could not save mermaid code: {e2}")
+
+def pretty_print_json_list(data: List[Dict[str, Any]]) -> None:
+    """
+    Pretty print a list of JSON objects in a readable format.
+    """
+
+    if not isinstance(data, list):
+        raise ValueError("Input must be a list")
+
+    for i, item in enumerate(data, start=1):
+        print(f"\n🔹 Object {i}")
+        print(json.dumps(item, indent=4, ensure_ascii=False, default=str))

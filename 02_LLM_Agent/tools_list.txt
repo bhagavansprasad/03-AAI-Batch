@@ -1,0 +1,91 @@
+Available tools:
+
+1. GITHUB_ADD_AN_EMAIL_ADDRESS_FOR_THE_AUTHENTICATED_USER
+Adds one or more email addresses (which will be initially unverified) to the authenticated user's GitHub account; use this to associate new emails, noting an email verified for another account will error, while an existing email for the current user is accepted.
+
+2. GITHUB_COMPARE_TWO_COMMITS
+Compares two commit points (commits, branches, tags, or SHAs) within a repository or across forks, using `BASE...HEAD` or `OWNER:REF...OWNER:REF` format for the `basehead` parameter.
+
+3. GITHUB_CREATE_A_BLOB
+Creates a Git blob in a repository, requiring content and encoding ('utf-8' or 'base64'). Requires write access to the repository.
+
+4. GITHUB_CREATE_A_PULL_REQUEST
+Creates a pull request in a GitHub repository, requiring existing `base` and `head` branches; `title` or `issue` must be provided.
+
+5. GITHUB_CREATE_A_REFERENCE
+Creates a NEW Git reference (branch or tag) in a repository. IMPORTANT: This action ONLY creates NEW references - if the reference already exists, it will fail with a 422 'Reference already exists' error. To update an existing reference, use the 'Update a reference' (GITHUB_UPDATE_A_REFERENCE) action instead. The repository must not be empty prior to this operation.
+
+6. GITHUB_CREATE_A_RELEASE
+Creates a release in a GitHub repository for a specified tag; the tag must be unique for published releases, and if a `discussion_category_name` is given, it must already exist.
+
+7. GITHUB_CREATE_A_TREE
+Creates a new Git tree object in a repository, defining file/directory structure by specifying tree entries, optionally building on a `base_tree` SHA; all provided SHAs must be valid.
+
+8. GITHUB_CREATE_OR_UPDATE_FILE_CONTENTS
+Creates a new file or updates an existing file in a GitHub repository; SHA can be provided to validate file updates, automatically fetched if not provided.
+
+9. GITHUB_DELETE_A_REPOSITORY
+Permanently deletes the specified repository; this is a destructive, irreversible action that requires admin privileges for the repository.
+
+10. GITHUB_FIND_PULL_REQUESTS
+Primary tool to find and search pull requests. Supports filtering by repository, author, state, labels, and merge status, and returns structured PR data for reliable use in workflows.
+
+11. GITHUB_FIND_REPOSITORIES
+AI-optimized repository search with smart filtering by language, stars, topics, and ownership. Builds intelligent search queries and returns clean, actionable repository data.
+
+12. GITHUB_GET_A_BLOB
+Retrieves the raw, typically Base64-encoded, content of a file (blob) from a GitHub repository using its SHA hash, if the repository and blob SHA exist.
+
+13. GITHUB_GET_A_PULL_REQUEST
+Retrieves a specific pull request from a GitHub repository using its owner, repository name, and pull request number.
+
+14. GITHUB_GET_A_REFERENCE
+Retrieves a specific Git reference (e.g., a branch, tag, or fully qualified like 'heads/main') from a GitHub repository. The reference must exist in the repository; use 'list_matching_references' first if unsure what references are available.
+
+15. GITHUB_GET_A_TREE
+Browse and list all files/directories in a GitHub repository. Efficiently retrieves the complete repository structure in a single API call when used with recursive mode. Perfect for analyzing codebase structure, finding specific files, or getting an overview of repository contents without cloning.
+
+16. GITHUB_GET_RAW_REPOSITORY_CONTENT
+Tool to fetch raw file content from a GitHub repository. Use when you need the raw bytes of a file in the repo.
+
+17. GITHUB_GET_REPOSITORY_CONTENT
+Retrieves a file's Base64 encoded content or lists a directory's contents from a GitHub repository.
+
+18. GITHUB_LIST_BRANCHES
+Lists branches for an existing GitHub repository, with an option to filter by protection status.
+
+19. GITHUB_LIST_DEPLOYMENTS
+Lists deployments for a specified repository; repository must exist.
+
+20. GITHUB_LIST_ORGANIZATIONS_FOR_A_USER
+Lists public organizations for a specified GitHub user; the `username` must be a valid GitHub handle.
+
+21. GITHUB_LIST_ORGANIZATIONS_FOR_THE_AUTHENTICATED_USER
+Lists organizations the authenticated GitHub user is a member of, returning details for each organization.
+
+22. GITHUB_LIST_PULL_REQUESTS
+Lists pull requests for a GitHub repository. REQUIRES 'owner' AND 'repo' parameters - both are MANDATORY and must be provided in every call. Does NOT support filtering by assignee or date range - use GITHUB_FIND_PULL_REQUESTS instead for searching PRs by assignee, author, or across multiple repositories.
+
+23. GITHUB_LIST_PULL_REQUESTS_FILES
+Lists all files (including additions, modifications, and removals) associated with a specific pull request in a GitHub repository.
+
+24. GITHUB_LIST_REPOSITORIES_FOR_THE_AUTHENTICATED_USER
+Lists repositories for the authenticated user; using 'type' with 'visibility' or 'affiliation' API parameters (not in this model) can cause a 422 error.
+
+25. GITHUB_LIST_REPOSITORIES_STARRED_BY_THE_AUTHENTICATED_USER
+Lists repositories the authenticated user has starred, optionally sorted and paginated, including star creation timestamps via 'application/vnd.github.star+json' media type.
+
+26. GITHUB_LIST_REPOSITORY_CONTRIBUTORS
+Lists contributors to a specified repository, sorted by number of contributions in descending order; the repository must exist and be accessible.
+
+27. GITHUB_LIST_REPOSITORY_ISSUES
+Lists issues (including pull requests) from a GitHub repository. Requires BOTH 'owner' AND 'repo' parameters (e.g., owner='octocat', repo='Hello-World' for github.com/octocat/Hello-World).
+
+28. GITHUB_LIST_STARGAZERS
+Lists users who have starred the specified GitHub repository, which must exist.
+
+29. GITHUB_STAR_A_REPOSITORY_FOR_THE_AUTHENTICATED_USER
+Stars a specified repository (identified by owner and repo name) for the authenticated user; this action is idempotent and succeeds even if the repository is already starred. Requires explicit repository identification via owner and repo parameters.
+
+30. GITHUB_UPDATE_A_REFERENCE
+Updates an existing Git reference (e.g., a branch or tag) to point to a specific commit SHA. By default, only allows fast-forward updates (where the new commit is a descendant of the current one). Set `force=true` to allow non-fast-forward updates that rewrite history. IMPORTANT: The reference must already exist - use 'Create a reference' action to create new refs.

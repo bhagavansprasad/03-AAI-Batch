@@ -7,13 +7,30 @@ from JiraTicketAgent import jira_Ticket_graph
 from GitWriteAgent import git_Write_graph
 import json
 import asyncio
+from lg_utility import pretty_print_json_list
 
+class OrchestraterData(TypedDict):
+    pr_details : str
+    owner: str
+    repo: str
+    pull_number: int
+    git_read_result : Optional[Dict[str, Any]]
+    diffs: list
+    bugs :list[str]
+    llm_review_result : Optional[Dict[str, Any]]
+    jira_ticket_details : Optional[Dict[str, Any]]
+    git_write_result : bool
 
 async def invoke_git_graph(pr_url:str):
     data = {'pr_details' : pr_url}
     git_return_value = await git_read_graph.ainvoke(data)
     #print(git_return_value)
-    return {'file_list':git_return_value['file_list'], 'diff':git_return_value['diff']} 
+    retval = {
+            "changed_files": git_return_value['changed_files'],
+            "diffs": git_return_value['diffs']
+            }
+    
+    return retval
 
 def invoke_llm_graph(file_list:list,difference:str):
     data = {'file_list' : file_list,'difference':difference}
@@ -37,20 +54,6 @@ def invoke_jira_graph(pr_details:str,bugs:list):
 def invoke_git_agent_write_graph(jira_ticket:str,review_comments:list, unit_tests:list):
     return None
 
-
-
-class OrchestraterData(TypedDict):
-    pr_details : str
-    owner: str
-    repo: str
-    pull_number: int
-    git_read_result : Optional[Dict[str, Any]]
-    bugs :list[str]
-    llm_review_result : Optional[Dict[str, Any]]
-    jira_ticket_details : Optional[Dict[str, Any]]
-    git_write_result : bool
-
-
 def orchestrator_init_node(state: OrchestraterData ):
     print ("in orchestrator_init_node")
     print(f"state :{state}")
@@ -71,8 +74,15 @@ async def git_read_agent_node(state: OrchestraterData ):
 
 def llm_agent_node(state: OrchestraterData ):
     #print(f"[ORCH] In llm_agent_node -> state: {state}")
-    file_list = state["git_read_result"]['file_list']
-    difference = state["git_read_result"]['diff']
+    # llm_input = {
+    #     "owner": state["owner"],
+    #     "repo": state["repo"],
+    #     "pull_number": state["pull_number"],
+    #     "diffs": state["git_read_result"]["diffs"]
+    # }
+
+    file_list = state["git_read_result"]
+    difference = ""
     state['llm_review_result']=  invoke_llm_graph(file_list,difference)
     print(f"[ORCH] Out llm_agent_node -> state: {state['llm_review_result']}")
     return state
@@ -116,6 +126,8 @@ async def main():
     data = {'pr_details' : 'https://github.com/promptlyaig/issue-tracker/pull/1'}
     
     final_state = await orchestrator_graph.ainvoke(data)
+
+    # pretty_print_json_list(state['changed_files'])
     
     tstr = json.dumps(final_state,  sort_keys=True, indent=4)
     print(tstr)
