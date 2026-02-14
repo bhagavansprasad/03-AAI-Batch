@@ -89,17 +89,14 @@ def jira_agent_node(state: OrchestraterData ):
 def git_write_agent_node(state: OrchestraterData ):
     return state
 
-
-
-
 def graph_Builder():
     Ograph = StateGraph(OrchestraterData)
 
-    Ograph.add_node("ORCHESTRATOR_INIT", orchestrator_init_node)
-    Ograph.add_node("GIT_READ_AGENT", git_read_agent_node)
-    Ograph.add_node("LLM_REVIEW_AGENT", llm_agent_node)
-    Ograph.add_node("JIRA_AGENT", jira_agent_node)
-    Ograph.add_node("GIT_WRITE_AGENT", git_write_agent_node)
+    Ograph.add_node("ORCHESTRATOR_INIT", orchestrator_init_node) # sync
+    Ograph.add_node("GIT_READ_AGENT", git_read_agent_node)       # async
+    Ograph.add_node("LLM_REVIEW_AGENT", llm_agent_node)          # sync   
+    Ograph.add_node("JIRA_AGENT", jira_agent_node)               # async
+    Ograph.add_node("GIT_WRITE_AGENT", git_write_agent_node)     # async
 
     Ograph.add_edge(START, "ORCHESTRATOR_INIT")
     Ograph.add_edge('ORCHESTRATOR_INIT', "GIT_READ_AGENT")
