@@ -32,8 +32,8 @@ async def invoke_git_graph(pr_url:str):
     
     return retval
 
-def invoke_llm_graph(file_list:list,difference:str):
-    data = {'file_list' : file_list,'difference':difference}
+def invoke_llm_graph(file_list:list, difference:list):
+    data = {'file_list' : file_list, 'difference':difference}
     llm_return_value = llm_review_graph.invoke(data)
     print(llm_return_value)
     file_list = llm_return_value['file_list']
@@ -73,22 +73,34 @@ async def git_read_agent_node(state: OrchestraterData ):
     return state
 
 def llm_agent_node(state: OrchestraterData ):
-    #print(f"[ORCH] In llm_agent_node -> state: {state}")
-    # llm_input = {
-    #     "owner": state["owner"],
-    #     "repo": state["repo"],
-    #     "pull_number": state["pull_number"],
-    #     "diffs": state["git_read_result"]["diffs"]
-    # }
+    print(f"[ORCH] In llm_agent_node -> state:")
+    # tstr = json.dumps(state, sort_keys=True, indent=4)
+    # print(tstr)
 
-    file_list = state["git_read_result"]
-    difference = ""
-    state['llm_review_result']=  invoke_llm_graph(file_list,difference)
-    print(f"[ORCH] Out llm_agent_node -> state: {state['llm_review_result']}")
+    llm_input = {
+        "owner": state["owner"],
+        "repo": state["repo"],
+        "pull_number": state["pull_number"],
+        "diffs": state["git_read_result"]["diffs"]
+    }
+
+    diffs = state["git_read_result"]["diffs"]
+    
+    flist = []
+    patches = []
+    for d in diffs:
+        fname = d["filename"]
+        difference = d["patch"]
+        flist.append(fname)
+        patches.append(difference)
+        
+    state['llm_review_result'] =  invoke_llm_graph(flist, patches)
+    # print(f"[ORCH] Out llm_agent_node -> state: {state['llm_review_result']}")
     return state
 
 def jira_agent_node(state: OrchestraterData ):
     #print(f"[ORCH] In Jira_agent_node -> state: {state}")
+    return state
     pr_details = state['pr_details'] 
     bugs = state["llm_review_result"]['bugs']
     state['jira_ticket_details'] = invoke_jira_graph(pr_details,bugs)
@@ -129,8 +141,8 @@ async def main():
 
     # pretty_print_json_list(state['changed_files'])
     
-    tstr = json.dumps(final_state,  sort_keys=True, indent=4)
-    print(tstr)
+    # tstr = json.dumps(final_state,  sort_keys=True, indent=4)
+    # print(tstr)
 
 if __name__ == "__main__":
     asyncio.run(main())
